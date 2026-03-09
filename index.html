@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Mala Bawo — Kutluk Ailesi</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#060810;--s1:#0d1117;--s2:#161b27;--s3:#1e2535;
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.11);
+  --blue:#3b82f6;--blue2:#60a5fa;--indigo:#6366f1;
+  --green:#22c55e;--yellow:#eab308;--red:#ef4444;
+  --pink:#ec4899;--purple:#a855f7;--orange:#f97316;
+  --text:#f8fafc;--soft:#94a3b8;--muted:#475569;--r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;
+  min-height:100vh;max-width:440px;margin:0 auto;overflow-x:hidden;padding-bottom:88px}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 40% at 50% -5%,rgba(99,102,241,.1),transparent),
+             radial-gradient(ellipse 50% 30% at 85% 85%,rgba(59,130,246,.07),transparent)}
+
+.scr{display:none;min-height:100vh;flex-direction:column;position:relative;z-index:1;animation:su .35s ease}
+.scr.on{display:flex}
+@keyframes su{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── ONBOARDING ── */
+#ob{align-items:center;justify-content:center;padding:30px 24px;text-align:center;gap:0}
+.ob-emoji{font-size:4rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.ob-title{font-size:2.2rem;font-weight:900;margin-bottom:8px;
+background:linear-gradient(135deg,#fff,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ob-sub{color:var(–soft);font-size:.95rem;margin-bottom:32px;line-height:1.6}
+.ob-form{width:100%;display:flex;flex-direction:column;gap:14px;text-align:left}
+.fl{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(–muted);
+text-transform:uppercase;margin-bottom:5px}
+.fi{width:100%;background:var(–s2);border:1.5px solid var(–border2);border-radius:13px;
+padding:13px 15px;font-family:‘Nunito’,sans-serif;font-size:.98rem;font-weight:600;
+color:var(–text);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus{border-color:var(–blue)}
+.fi::placeholder{color:var(–muted)}
+select.fi{cursor:pointer}
+select.fi option{background:#1e2535}
+.emoji-row{display:flex;gap:7px;flex-wrap:wrap}
+.eo{width:44px;height:44px;background:var(–s2);border:1.5px solid var(–border2);
+border-radius:11px;display:flex;align-items:center;justify-content:center;
+font-size:1.4rem;cursor:pointer;transition:all .18s}
+.eo.sel{border-color:var(–blue);background:rgba(59,130,246,.12);transform:scale(1.1)}
+.join-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(–indigo),var(–blue));
+border:none;border-radius:14px;color:#fff;font-family:‘Nunito’,sans-serif;
+font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:4px;
+box-shadow:0 6px 28px rgba(99,102,241,.35);transition:all .2s}
+.join-btn:active{transform:scale(.97)}
+
+/* ── LOADING ── */
+#loading{align-items:center;justify-content:center;gap:16px}
+.spin{width:40px;height:40px;border:3px solid var(–border2);border-top-color:var(–blue);
+border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;
+padding:14px 18px 8px;position:sticky;top:0;z-index:50;
+background:rgba(6,8,16,.88);backdrop-filter:blur(20px)}
+.tb-info{display:flex;flex-direction:column}
+.tb-greet{font-size:.7rem;color:var(–muted);font-weight:600}
+.tb-name{font-size:1.05rem;font-weight:900}
+.tb-right{display:flex;align-items:center;gap:8px}
+.bat-pill{background:var(–s2);border:1px solid var(–border2);border-radius:20px;
+padding:4px 9px;font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:3px}
+.ava-sm{width:34px;height:34px;border-radius:10px;background:var(–s3);
+display:flex;align-items:center;justify-content:center;font-size:1.15rem;
+border:1px solid var(–border2)}
+
+/* ── NAV ── */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+width:100%;max-width:440px;z-index:100;
+background:rgba(13,17,23,.94);backdrop-filter:blur(24px);
+border-top:1px solid var(–border);display:flex;padding:10px 0 22px}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+background:none;border:none;cursor:pointer;color:var(–muted);
+font-family:‘Nunito’,sans-serif;font-size:.63rem;font-weight:700;
+letter-spacing:.03em;padding:5px 0;transition:color .2s;position:relative}
+.nb.on{color:var(–blue2)}
+.nb .ico{font-size:1.3rem;transition:transform .2s}
+.nb.on .ico{transform:scale(1.18)}
+.nb-badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(–red);
+color:#fff;border-radius:20px;font-size:.58rem;font-weight:800;
+padding:1px 5px;min-width:16px;text-align:center;display:none;
+border:2px solid var(–bg)}
+.nb-badge.on{display:block}
+
+/* ── SECTION ── */
+.sh{font-size:.68rem;font-weight:800;letter-spacing:.12em;color:var(–muted);
+text-transform:uppercase;padding:16px 18px 8px;display:flex;justify-content:space-between;align-items:center}
+.sh span{font-size:.76rem;color:var(–blue2);font-weight:700;text-transform:none;letter-spacing:0}
+
+/* ── CLOCKS ── */
+.clocks{display:flex;gap:8px;overflow-x:auto;padding:2px 18px 12px;scrollbar-width:none}
+.clocks::-webkit-scrollbar{display:none}
+.ck{flex-shrink:0;background:var(–s2);border:1px solid var(–border);
+border-radius:13px;padding:9px 13px;text-align:center;min-width:84px}
+.ck.me{border-color:rgba(59,130,246,.35);background:rgba(59,130,246,.07)}
+.ck-flag{font-size:.85rem}
+.ck-city{font-size:.58rem;color:var(–muted);font-weight:700;text-transform:uppercase;
+letter-spacing:.07em;margin:1px 0 2px}
+.ck-time{font-size:1rem;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* ── SPECIAL CARDS ── */
+.sp-cards{padding:0 18px;display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+.sp{border-radius:var(–r);padding:14px 16px;display:flex;align-items:center;gap:12px;border:1px solid}
+.sp.fire{background:rgba(249,115,22,.07);border-color:rgba(249,115,22,.18)}
+.sp.bday{background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.18)}
+.sp-ico{font-size:1.9rem;flex-shrink:0}
+.sp-body{flex:1}
+.sp-title{font-size:.92rem;font-weight:800;margin-bottom:1px}
+.sp-sub{font-size:.75rem;color:var(–soft);line-height:1.5}
+.sp-val{font-size:1.9rem;font-weight:900;flex-shrink:0}
+.sp.fire .sp-val{color:var(–orange)}.sp.bday .sp-val{color:var(–purple)}
+
+/* ── QUICK ACTIONS ── */
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 18px;margin-bottom:4px}
+.qa{background:var(–s2);border:1px solid var(–border);border-radius:13px;
+padding:11px 5px 9px;text-align:center;cursor:pointer;transition:all .16s;
+display:flex;flex-direction:column;align-items:center;gap:4px}
+.qa:active{transform:scale(.90);background:var(–s3)}
+.qa-ic{font-size:1.35rem}
+.qa-lb{font-size:.57rem;font-weight:800;color:var(–muted);line-height:1.2}
+
+/* ── MEMBER CARDS ── */
+.mcards{padding:0 18px}
+.mcard{background:var(–s2);border:1px solid var(–border);border-radius:var(–r);
+padding:14px;margin-bottom:9px;animation:su .4s ease backwards;transition:border-color .2s}
+.mcard.me-card{border-color:rgba(59,130,246,.25)}
+.mcard-top{display:flex;align-items:center;gap:11px}
+.mc-ava{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;
+justify-content:center;font-size:1.5rem;flex-shrink:0;position:relative}
+.dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;
+border-radius:50%;border:2.5px solid var(–s2)}
+.dot.on{background:var(–green)}.dot.ay{background:var(–yellow)}.dot.off{background:var(–muted)}
+.mc-mid{flex:1;min-width:0}
+.mc-nm{font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.mc-role{font-size:.67rem;font-weight:700;border-radius:6px;padding:1px 6px}
+.mc-loc{font-size:.75rem;color:var(–soft);margin-top:1px}
+.mc-right{text-align:right;flex-shrink:0}
+.mc-t{font-size:.88rem;font-weight:800;font-variant-numeric:tabular-nums}
+.mc-w{font-size:.68rem;color:var(–muted);margin-top:1px}
+.mcard-bot{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.mpill{background:var(–s3);border-radius:8px;padding:4px 9px;
+font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:4px;border:1px solid var(–border)}
+.bat-mini{height:3px;width:32px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.bat-mini-fill{height:100%;border-radius:2px}
+
+/* ── CHAT ── */
+#s-chat{padding:0}
+.chat-top{padding:12px 18px 10px;background:rgba(6,8,16,.9);backdrop-filter:blur(20px);
+position:sticky;top:0;z-index:40;border-bottom:1px solid var(–border);
+display:flex;align-items:center;justify-content:space-between}
+.chat-tit{font-size:1.1rem;font-weight:900}
+.chat-sub{font-size:.7rem;color:var(–soft);margin-top:1px}
+.online-badge{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22);
+color:var(–green);border-radius:20px;padding:3px 9px;font-size:.68rem;font-weight:800;
+display:flex;align-items:center;gap:3px}
+.msgs-box{flex:1;padding:10px 18px;display:flex;flex-direction:column;gap:1px;
+overflow-y:auto;scrollbar-width:none;min-height:50vh}
+.msgs-box::-webkit-scrollbar{display:none}
+.msg-g{margin-bottom:12px}
+.msg-sender{font-size:.68rem;font-weight:800;color:var(–muted);margin-bottom:3px;
+display:flex;align-items:center;gap:4px}
+.msg-bub{display:inline-block;max-width:82%;padding:9px 13px;border-radius:17px;
+font-size:.9rem;line-height:1.55;word-break:break-word}
+.msg-bub.other{background:var(–s2);border:1px solid var(–border);border-bottom-left-radius:4px}
+.msg-bub.me{background:linear-gradient(135deg,var(–indigo),var(–blue));color:#fff;border-bottom-right-radius:4px}
+.msg-row{display:flex;flex-direction:column}
+.msg-row.mine{align-items:flex-end}
+.msg-ts{font-size:.6rem;color:var(–muted);margin-top:2px;padding:0 2px}
+.typing{display:flex;align-items:center;gap:4px;padding:6px 0}
+.typing span{width:7px;height:7px;background:var(–muted);border-radius:50%;
+animation:typ .9s ease-in-out infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes typ{0%,80%,100%{transform:scale(.8);opacity:.5}40%{transform:scale(1.1);opacity:1}}
+.chat-bottom{padding:8px 18px 6px;border-top:1px solid var(–border);
+background:rgba(6,8,16,.9);backdrop-filter:blur(20px)}
+.qr-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:7px;scrollbar-width:none}
+.qr-row::-webkit-scrollbar{display:none}
+.qr{background:var(–s2);border:1px solid var(–border2);border-radius:20px;
+padding:5px 11px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;
+transition:all .14s;flex-shrink:0}
+.qr:active{background:var(–blue);border-color:var(–blue);color:#fff}
+.inp-row{display:flex;gap:8px;align-items:flex-end}
+.chat-inp{flex:1;background:var(–s2);border:1.5px solid var(–border2);
+border-radius:13px;padding:11px 13px;font-family:‘Nunito’,sans-serif;
+font-size:.92rem;font-weight:500;color:var(–text);outline:none;resize:none;
+max-height:90px;line-height:1.4;transition:border-color .2s}
+.chat-inp:focus{border-color:var(–blue)}
+.chat-inp::placeholder{color:var(–muted)}
+.send-btn{width:42px;height:42px;background:linear-gradient(135deg,var(–indigo),var(–blue));
+border:none;border-radius:12px;display:flex;align-items:center;justify-content:center;
+cursor:pointer;flex-shrink:0;font-size:1.1rem;color:#fff;transition:all .15s}
+.send-btn:active{transform:scale(.88)}
+
+/* ── MAP ── */
+.map-box{margin:0 18px 12px;background:var(–s2);border:1px solid var(–border);
+border-radius:var(–r);overflow:hidden}
+.map-box svg{width:100%;height:auto;display:block}
+.map-leg{padding:0 18px;display:flex;flex-direction:column;gap:7px}
+.ml{background:var(–s2);border:1px solid var(–border);border-radius:13px;
+padding:11px 13px;display:flex;align-items:center;gap:9px;animation:su .35s ease backwards}
+.ml-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ml-info{flex:1}
+.ml-nm{font-size:.9rem;font-weight:800}
+.ml-city{font-size:.7rem;color:var(–muted)}
+.ml-r{text-align:right}
+.ml-t{font-size:.86rem;font-weight:800}
+.ml-w{font-size:.66rem;color:var(–muted)}
+
+/* ── ACTIONS ── */
+.act-wrap{padding:0 18px}
+.sos-btn{width:100%;padding:17px;background:linear-gradient(135deg,#dc2626,#ef4444);
+border:none;border-radius:var(–r);color:#fff;font-family:‘Nunito’,sans-serif;
+font-size:1.05rem;font-weight:900;cursor:pointer;margin-bottom:11px;
+display:flex;align-items:center;justify-content:center;gap:10px;
+box-shadow:0 5px 28px rgba(239,68,68,.28);transition:all .2s}
+.sos-btn:active{transform:scale(.97)}
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.act-c{background:var(–s2);border:1px solid var(–border);border-radius:var(–r);
+padding:14px;text-align:center;cursor:pointer;transition:all .16s;
+display:flex;flex-direction:column;align-items:center;gap:7px}
+.act-c:active{transform:scale(.94)}
+.act-ico{font-size:1.8rem}
+.act-lb{font-size:.8rem;font-weight:700;color:var(–soft)}
+.st-item{background:var(–s2);border:1px solid var(–border);border-radius:12px;
+padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.st-l{display:flex;align-items:center;gap:7px;font-weight:700;font-size:.86rem}
+.st-r{font-size:.76rem;font-weight:700}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:68px;left:50%;transform:translateX(-50%) translateY(-8px);
+background:var(–s3);border:1px solid var(–border2);color:var(–text);
+border-radius:14px;padding:11px 16px;font-size:.83rem;font-weight:700;
+z-index:9999;opacity:0;pointer-events:none;transition:all .28s;
+max-width:320px;text-align:center;box-shadow:0 6px 28px rgba(0,0,0,.4);white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.g{border-color:rgba(34,197,94,.28);color:var(–green)}
+.toast.r{border-color:rgba(239,68,68,.28);color:var(–red)}
+</style>
+
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- ONBOARDING -->
+
+<div class="scr on" id="ob">
+  <div class="ob-emoji">👨‍👩‍👧‍👦</div>
+  <h1 class="ob-title">Mala Bawo</h1>
+  <p class="ob-sub">Almanya · Irak · Türkiye<br/>Hepiniz tek ekranda bir arada 🌍</p>
+  <div class="ob-form">
+    <div><div class="fl">Adın</div>
+      <input class="fi" id="ob-name" placeholder="Adını yaz..." maxlength="20" autocomplete="off"/></div>
+    <div><div class="fl">Rolün</div>
+      <select class="fi" id="ob-role">
+        <option value="Ben">Ben — Yılmaz 🇩🇪</option>
+        <option value="Anne">Anne</option><option value="Baba">Baba</option>
+        <option value="Abi">Abi</option><option value="Abla">Abla</option>
+        <option value="Kardeş">Kardeş</option><option value="Yenge">Yenge</option>
+      </select></div>
+    <div><div class="fl">Şehrin</div>
+      <select class="fi" id="ob-city">
+        <option value="Berlin|🇩🇪|1">Berlin 🇩🇪</option>
+        <option value="Erbil|🇮🇶|3">Erbil 🇮🇶</option>
+        <option value="Van|🇹🇷|3">Van 🇹🇷</option>
+        <option value="Antalya|🇹🇷|3">Antalya 🇹🇷</option>
+        <option value="Diyarbakır|🇹🇷|3">Diyarbakır 🇹🇷</option>
+        <option value="İstanbul|🇹🇷|3">İstanbul 🇹🇷</option>
+        <option value="Ankara|🇹🇷|3">Ankara 🇹🇷</option>
+        <option value="Bağdat|🇮🇶|3">Bağdat 🇮🇶</option>
+      </select></div>
+    <div><div class="fl">Avatarın</div>
+      <div class="emoji-row" id="emo-row"></div></div>
+    <button class="join-btn" onclick="joinApp()">Aileye Katıl →</button>
+  </div>
+</div>
+
+<!-- LOADING -->
+
+<div class="scr" id="loading"><div class="spin"></div><p style="color:var(--soft);font-weight:700">Bağlanıyor...</p></div>
+
+<!-- APP -->
+
+<div class="scr" id="app" style="padding:0">
+  <div class="topbar">
+    <div class="tb-info">
+      <div class="tb-greet" id="tb-greet">Merhaba 👋</div>
+      <div class="tb-name" id="tb-name">...</div>
+    </div>
+    <div class="tb-right">
+      <div class="bat-pill" id="bat-pill">🔋 --</div>
+      <div class="ava-sm" id="tb-ava">👤</div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+
+  <div class="scr on" id="s-home" style="min-height:unset">
+    <div class="sh">Dünya Saatleri</div>
+    <div class="clocks" id="clocks"></div>
+    <div class="sp-cards">
+      <div class="sp fire"><div class="sp-ico">🔥</div>
+        <div class="sp-body"><div class="sp-title">Aile Serisi</div>
+          <div class="sp-sub">Her gün aktif olun, ateş sönmesin!</div></div>
+        <div class="sp-val" id="fire-val">—</div></div>
+      <div class="sp bday"><div class="sp-ico">🎂</div>
+        <div class="sp-body"><div class="sp-title">Yaklaşan Doğum Günü</div>
+          <div class="sp-sub" id="bday-sub">Hesaplanıyor...</div></div>
+        <div class="sp-val" id="bday-val">—</div></div>
+    </div>
+    <div class="sh">Hızlı Bildirim <span>Herkese gider ⚡</span></div>
+    <div class="qa-grid">
+      <div class="qa" onclick="qa('🏠','Eve geldim')"><div class="qa-ic">🏠</div><div class="qa-lb">Eve Geldim</div></div>
+      <div class="qa" onclick="qa('📞','Beni ara lütfen')"><div class="qa-ic">📞</div><div class="qa-lb">Ara Beni</div></div>
+      <div class="qa" onclick="qa('🙏','Dua edin')"><div class="qa-ic">🙏</div><div class="qa-lb">Dua Edin</div></div>
+      <div class="qa" onclick="qa('🌙','İyi geceler')"><div class="qa-ic">🌙</div><div class="qa-lb">İyi Geceler</div></div>
+      <div class="qa" onclick="qa('🍽️','Yemek yedim')"><div class="qa-ic">🍽️</div><div class="qa-lb">Yedim</div></div>
+      <div class="qa" onclick="qa('😊','İyiyim merak etmeyin')"><div class="qa-ic">😊</div><div class="qa-lb">İyiyim</div></div>
+      <div class="qa" onclick="qa('✈️','Yolculuktayım')"><div class="qa-ic">✈️</div><div class="qa-lb">Yolculuk</div></div>
+      <div class="qa" onclick="qa('☕','Kahve içiyorum')"><div class="qa-ic">☕</div><div class="qa-lb">Kahvede</div></div>
+    </div>
+    <div class="sh">Aile <span id="online-ct"></span></div>
+    <div class="mcards" id="mcards"></div>
+  </div>
+
+  <!-- CHAT -->
+
+  <div class="scr" id="s-chat">
+    <div class="chat-top">
+      <div><div class="chat-tit">💬 Aile Sohbeti</div>
+        <div class="chat-sub" id="chat-sub">Yükleniyor...</div></div>
+      <div class="online-badge">🟢 <span id="chat-online">—</span></div>
+    </div>
+    <div class="msgs-box" id="msgs-box"></div>
+    <div class="chat-bottom">
+      <div class="qr-row" id="qr-row"></div>
+      <div class="inp-row">
+        <textarea class="chat-inp" id="chat-inp" placeholder="Mesajını yaz..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendMsg()">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP -->
+
+  <div class="scr" id="s-map">
+    <div class="sh" style="padding-top:14px">Harita <span>Canlı konumlar</span></div>
+    <div class="map-box">
+      <svg viewBox="0 0 520 290" xmlns="http://www.w3.org/2000/svg">
+        <rect width="520" height="290" fill="#0d1117"/>
+        <defs><pattern id="gr" width="28" height="28" patternUnits="userSpaceOnUse">
+          <path d="M28 0L0 0 0 28" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
+        </pattern></defs>
+        <rect width="520" height="290" fill="url(#gr)"/>
+        <path d="M120,40 Q165,28 200,40 Q222,35 240,50 Q256,57 258,76 Q260,92 247,100 Q232,110 215,105 Q198,116 183,108 Q162,118 146,110 Q125,104 116,87 Q107,70 111,55 Z" fill="rgba(59,130,246,.1)" stroke="rgba(59,130,246,.18)" stroke-width=".7"/>
+        <path d="M254,88 Q292,76 328,83 Q354,83 360,101 Q357,120 337,124 Q313,131 289,125 Q266,120 256,106 Z" fill="rgba(239,68,68,.1)" stroke="rgba(239,68,68,.18)" stroke-width=".7"/>
+        <path d="M314,110 Q344,102 368,114 Q382,125 378,144 Q367,158 349,156 Q328,154 316,142 Q306,129 314,110 Z" fill="rgba(34,197,94,.1)" stroke="rgba(34,197,94,.18)" stroke-width=".7"/>
+        <circle cx="184" cy="70" r="7" fill="#3b82f6" opacity=".9"/>
+        <circle cx="184" cy="70" r="7" fill="none" stroke="#3b82f6" stroke-width="2" opacity=".5"><animate attributeName="r" values="7;22;7" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="2.5s" repeatCount="indefinite"/></circle>
+        <text x="193" y="66" font-size="8.5" fill="#94a3b8" font-family="Nunito,sans-serif" font-weight="700">Berlin 🇩🇪</text>
+        <circle cx="347" cy="129" r="8" fill="#22c55e" opacity=".9"/>
+        <circle cx="347" cy="129" r="8" fill="none" stroke="#22c55e" stroke-width="2" opacity=".5"><animate attributeName="r" values="8;24;8" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="2.2s" repeatCount="indefinite"/></circle>
+        <text x="357" y="125" font-size="8.5" fill="#94a3b8" font-family="Nunito,sans-serif" font-weight="700">Erbil 🇮🇶</text>
+        <circle cx="319" cy="99" r="5.5" fill="#ef4444" opacity=".9"/>
+        <circle cx="319" cy="99" r="5.5" fill="none" stroke="#ef4444" stroke-width="2" opacity=".5"><animate attributeName="r" values="5;16;5" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3s" repeatCount="indefinite"/></circle>
+        <text x="328" y="95" font-size="8" fill="#94a3b8" font-family="Nunito,sans-serif" font-weight="700">Van 🇹🇷</text>
+        <circle cx="284" cy="114" r="5" fill="#a855f7" opacity=".9"/>
+        <circle cx="284" cy="114" r="5" fill="none" stroke="#a855f7" stroke-width="2" opacity=".5"><animate attributeName="r" values="5;14;5" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="2.8s" repeatCount="indefinite"/></circle>
+        <text x="250" y="130" font-size="7.5" fill="#94a3b8" font-family="Nunito,sans-serif">Antalya 🇹🇷</text>
+        <line x1="184" y1="70" x2="319" y2="99" stroke="rgba(255,255,255,.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="319" y1="99" x2="347" y2="129" stroke="rgba(255,255,255,.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="184" y1="70" x2="347" y2="129" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="4,4"/>
+      </svg>
+    </div>
+    <div class="map-leg" id="map-leg"></div>
+  </div>
+
+  <!-- ACTIONS -->
+
+  <div class="scr" id="s-act">
+    <div class="sh" style="padding-top:14px">🆘 Acil Buton</div>
+    <div class="act-wrap">
+      <button class="sos-btn" onclick="sos()">🚨 &nbsp; ACİL — Yardım Edin</button>
+      <div class="sh" style="padding:0 0 10px">Hızlı Bildirimler</div>
+      <div class="act-grid">
+        <div class="act-c" onclick="qa('🏥','Hastanedeyim')"><div class="act-ico">🏥</div><div class="act-lb">Hastanedeyim</div></div>
+        <div class="act-c" onclick="qa('🛬','Güvenle indim')"><div class="act-ico">🛬</div><div class="act-lb">İndim, güvendeyim</div></div>
+        <div class="act-c" onclick="qa('💙','Bugün zor bir gün')"><div class="act-ico">💙</div><div class="act-lb">Zor bir gün</div></div>
+        <div class="act-c" onclick="qa('🎉','Haberim var!')"><div class="act-ico">🎉</div><div class="act-lb">Haberim var!</div></div>
+        <div class="act-c" onclick="qa('🤫','Toplantıdayım')"><div class="act-ico">🤫</div><div class="act-lb">Toplantıdayım</div></div>
+        <div class="act-c" onclick="qa('🛏️','Uyuyacağım')"><div class="act-ico">🛏️</div><div class="act-lb">Uyuyacağım</div></div>
+      </div>
+      <div class="sh" style="padding:0 0 10px">Aile Durumu</div>
+      <div id="st-list"></div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nb on" onclick="goTab('home',this)"><span class="ico">🏠</span>Ana</button>
+    <button class="nb" onclick="goTab('chat',this)"><span class="ico">💬</span>Sohbet<div class="nb-badge on" id="chat-badge">!</div></button>
+    <button class="nb" onclick="goTab('map',this)"><span class="ico">🌍</span>Harita</button>
+    <button class="nb" onclick="goTab('act',this)"><span class="ico">🆘</span>Acil</button>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, push, onValue, set, serverTimestamp, onDisconnect, get }
+  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpcue6ZLSX7iIlVHWmQhE9H0fGiMvXmas",
+  authDomain: "mala-bawo.firebaseapp.com",
+  databaseURL: "https://mala-bawo-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "mala-bawo",
+  storageBucket: "mala-bawo.firebasestorage.app",
+  messagingSenderId: "280521028059",
+  appId: "1:280521028059:web:dd891137bab8b53e0fb8c4",
+  measurementId: "G-6C58LV8M5V"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const EMOJIS=['👨','👩','👴','👵','🧔','👩‍🦱','👨‍🦱','🧕','👦','👧','🧑','👲'];
+const COLORS=['#3b82f6','#22c55e','#ef4444','#f97316','#a855f7','#ec4899','#14b8a6','#eab308','#06b6d4'];
+const TZ={'Berlin':1,'Erbil':3,'Van':3,'Antalya':3,'Diyarbakır':3,'İstanbul':3,'Ankara':3,'Bağdat':3};
+const FLAGS={'Berlin':'🇩🇪','Erbil':'🇮🇶','Van':'🇹🇷','Antalya':'🇹🇷','Diyarbakır':'🇹🇷','İstanbul':'🇹🇷','Ankara':'🇹🇷','Bağdat':'🇮🇶'};
+const WEATHERS={'Berlin':'🌧 11°C','Erbil':'☀️ 28°C','Van':'🌤 13°C','Antalya':'🌞 22°C',
+  'Diyarbakır':'⛅ 17°C','İstanbul':'🌥 15°C','Ankara':'🌬 9°C','Bağdat':'🔆 35°C'};
+
+let ME = {};
+let selEmoji = EMOJIS[0];
+let batVal = null;
+let allMembers = {};
+let unsubChat = null;
+let newMsgCount = 0;
+let userColor = COLORS[0];
+
+// ═══════════════════════════════════════
+// EMOJI PICKER
+// ═══════════════════════════════════════
+const er = document.getElementById('emo-row');
+EMOJIS.forEach(e => {
+  const d = document.createElement('div');
+  d.className = 'eo' + (e === selEmoji ? ' sel' : '');
+  d.textContent = e;
+  d.onclick = () => { selEmoji = e; er.querySelectorAll('.eo').forEach(x=>x.classList.remove('sel')); d.classList.add('sel'); };
+  er.appendChild(d);
+});
+
+// ═══════════════════════════════════════
+// JOIN
+// ═══════════════════════════════════════
+window.joinApp = function() {
+  const name = document.getElementById('ob-name').value.trim();
+  if (!name) { document.getElementById('ob-name').focus(); return; }
+  const cityParts = document.getElementById('ob-city').value.split('|');
+  const city = cityParts[0];
+  const role = document.getElementById('ob-role').value;
+  // Pick a color based on name hash
+  let hash = 0; for (let c of name) hash = (hash * 31 + c.charCodeAt(0)) % COLORS.length;
+  userColor = COLORS[hash];
+  ME = { name, role, city, emoji: selEmoji, color: userColor };
+  localStorage.setItem('malabawo_me', JSON.stringify(ME));
+  initApp();
+};
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+async function initApp() {
+  show('loading');
+  // Battery
+  try {
+    const b = await navigator.getBattery();
+    batVal = Math.round(b.level * 100);
+    b.addEventListener('levelchange', () => { batVal = Math.round(b.level * 100); updateBatUI(); updatePresence(); });
+  } catch {}
+
+  // Register presence
+  const uid = ME.name.toLowerCase().replace(/\s+/g,'_') + '_' + ME.city.toLowerCase();
+  ME.uid = uid;
+  const presRef = ref(db, 'presence/' + uid);
+  const presData = { name: ME.name, role: ME.role, city: ME.city, emoji: ME.emoji, color: ME.color, bat: batVal, status: 'online', lastSeen: serverTimestamp() };
+  await set(presRef, presData);
+  onDisconnect(presRef).update({ status: 'offline', lastSeen: serverTimestamp() });
+
+  // Watch members
+  onValue(ref(db, 'presence'), snap => {
+    allMembers = {};
+    snap.forEach(child => { allMembers[child.key] = child.val(); });
+    renderMembers();
+    renderStList();
+    updateOnlineCount();
+  });
+
+  // Watch fire streak
+  onValue(ref(db, 'streak'), snap => {
+    const v = snap.val();
+    document.getElementById('fire-val').textContent = v ? (v.days || 1) : 1;
+  });
+  // Update streak
+  const today = new Date().toDateString();
+  const streakRef = ref(db, 'streak');
+  const streakSnap = await get(streakRef);
+  const streakData = streakSnap.val() || { days: 0, lastDay: '' };
+  if (streakData.lastDay !== today) {
+    const yest = new Date(); yest.setDate(yest.getDate()-1);
+    const newDays = streakData.lastDay === yest.toDateString() ? streakData.days + 1 : 1;
+    await set(streakRef, { days: newDays, lastDay: today });
+  }
+
+  // Setup UI
+  const hr = new Date().getHours();
+  const greet = hr<6?'İyi geceler 🌙':hr<12?'Günaydın ☀️':hr<18?'İyi günler 👋':'İyi akşamlar 🌆';
+  document.getElementById('tb-greet').textContent = greet;
+  document.getElementById('tb-name').textContent = ME.name;
+  document.getElementById('tb-ava').textContent = ME.emoji;
+  updateBatUI();
+  renderClocks(); setInterval(renderClocks, 10000);
+  renderBday();
+  setupChat();
+  buildQuickReplies();
+  show('app');
+}
+
+function updatePresence() {
+  if (!ME.uid) return;
+  set(ref(db, 'presence/' + ME.uid + '/bat'), batVal);
+}
+
+function updateBatUI() {
+  document.getElementById('bat-pill').textContent = batVal !== null ? `🔋 ${batVal}%` : '🔋 --';
+}
+
+// ═══════════════════════════════════════
+// CLOCKS
+// ═══════════════════════════════════════
+function getCT(tz) {
+  const n = new Date(), u = n.getTime() + n.getTimezoneOffset()*60000;
+  return new Date(u + tz*3600000).toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit'});
+}
+
+function renderClocks() {
+  const c = document.getElementById('clocks');
+  const cities = [{name:'Berlin',flag:'🇩🇪',tz:1},{name:'Erbil',flag:'🇮🇶',tz:3},{name:'Van',flag:'🇹🇷',tz:3},{name:'Antalya',flag:'🇹🇷',tz:3}];
+  if (!c.children.length) {
+    cities.forEach(ci => {
+      const d = document.createElement('div');
+      d.className = 'ck' + (ci.name === ME.city ? ' me' : '');
+      d.dataset.tz = ci.tz;
+      d.innerHTML = `<div class="ck-flag">${ci.flag}</div><div class="ck-city">${ci.name}</div><div class="ck-time">--:--</div>`;
+      c.appendChild(d);
+    });
+  }
+  c.querySelectorAll('.ck').forEach(p => p.querySelector('.ck-time').textContent = getCT(+p.dataset.tz));
+}
+
+// ═══════════════════════════════════════
+// MEMBERS
+// ═══════════════════════════════════════
+function batColor(b) { return b===null?'var(--muted)':b>50?'var(--green)':b>20?'var(--yellow)':'var(--red)'; }
+
+function renderMembers() {
+  const box = document.getElementById('mcards'); box.innerHTML = '';
+  const mems = Object.values(allMembers).sort((a,b) => {
+    if (a.name === ME.name) return -1;
+    if (b.name === ME.name) return 1;
+    const order = {'online':0,'away':1,'offline':2};
+    return (order[a.status]||2) - (order[b.status]||2);
+  });
+  const onlineCt = mems.filter(m=>m.status==='online').length;
+  document.getElementById('online-ct').textContent = onlineCt + ' aktif';
+
+  mems.forEach((m, i) => {
+    const isMe = m.name === ME.name;
+    const city = m.city || '';
+    const tz = TZ[city] || 3;
+    const ct = getCT(tz);
+    const bat = isMe ? batVal : m.bat;
+    const d = document.createElement('div');
+    d.className = 'mcard' + (isMe ? ' me-card' : '');
+    d.style.animationDelay = `${i * .055}s`;
+    d.innerHTML = `
+      <div class="mcard-top">
+        <div class="mc-ava" style="background:${m.color||'#3b82f6'}18">
+          ${m.emoji||'👤'}
+          <div class="dot ${m.status==='online'?'on':m.status==='away'?'ay':'off'}"></div>
+        </div>
+        <div class="mc-mid">
+          <div class="mc-nm">
+            ${m.name}
+            <span class="mc-role" style="background:${m.color||'#3b82f6'}18;color:${m.color||'#3b82f6'}">${m.role||''}</span>
+            ${isMe?'<span style="font-size:.63rem;color:var(--muted)">(Sen)</span>':''}
+          </div>
+          <div class="mc-loc">${FLAGS[city]||''} ${city}</div>
+        </div>
+        <div class="mc-right">
+          <div class="mc-t">${ct}</div>
+          <div class="mc-w">${WEATHERS[city]||'🌤'}</div>
+        </div>
+      </div>
+      <div class="mcard-bot">
+        ${bat!==null?`<div class="mpill">🔋 <span style="color:${batColor(bat)};font-weight:800">${bat}%</span>
+          <div class="bat-mini"><div class="bat-mini-fill" style="width:${bat}%;background:${batColor(bat)}"></div></div></div>`:''}
+        <div class="mpill" style="color:${m.status==='online'?'var(--green)':m.status==='away'?'var(--yellow)':'var(--muted)'}">
+          ${m.status==='online'?'🟢 Aktif':m.status==='away'?'🟡 Meşgul':'⚫ Çevrimdışı'}
+        </div>
+      </div>`;
+    box.appendChild(d);
+  });
+}
+
+function updateOnlineCount() {
+  const ct = Object.values(allMembers).filter(m=>m.status==='online').length;
+  document.getElementById('chat-online').textContent = ct;
+  document.getElementById('chat-sub').textContent = `${ct} kişi şu an aktif`;
+}
+
+// ═══════════════════════════════════════
+// BIRTHDAY
+// ═══════════════════════════════════════
+function renderBday() {
+  const bdates = [{name:'Baba',m:5,d:15},{name:'Anne',m:8,d:3},{name:'Faruk',m:11,d:20}];
+  const now = new Date(); let near = null, minD = 999;
+  bdates.forEach(b => {
+    let dt = new Date(now.getFullYear(), b.m-1, b.d);
+    if (dt < now) dt = new Date(now.getFullYear()+1, b.m-1, b.d);
+    const days = Math.ceil((dt - now) / 864e5);
+    if (days < minD) { minD = days; near = {...b, days}; }
+  });
+  if (near) {
+    document.getElementById('bday-sub').textContent = `${near.name}ın doğum gününe`;
+    document.getElementById('bday-val').textContent = near.days;
+  }
+}
+
+// ═══════════════════════════════════════
+// CHAT — REAL FIREBASE
+// ═══════════════════════════════════════
+function setupChat() {
+  const box = document.getElementById('msgs-box');
+  // Listen to last 80 messages
+  const msgsRef = ref(db, 'messages');
+  onValue(msgsRef, snap => {
+    box.innerHTML = '';
+    const msgs = [];
+    snap.forEach(child => msgs.push(child.val()));
+    // Show last 80
+    msgs.slice(-80).forEach(m => appendMsgEl(m));
+    requestAnimationFrame(() => box.scrollTop = box.scrollHeight);
+    if (msgs.length > 0) document.getElementById('chat-badge').classList.remove('on');
+  });
+}
+
+function appendMsgEl(m) {
+  const box = document.getElementById('msgs-box');
+  const isMe = m.name === ME.name;
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-row' + (isMe ? ' mine' : '');
+  const flag = FLAGS[m.city] || '';
+  if (!isMe) {
+    wrap.innerHTML = `<div class="msg-sender">${m.emoji||'👤'} ${flag} <strong>${m.name}</strong> — ${m.city||''}</div>
+      <div class="msg-bub other">${escHtml(m.text)}</div>
+      <div class="msg-ts">${m.time||''}</div>`;
+  } else {
+    wrap.innerHTML = `<div class="msg-bub me">${escHtml(m.text)}</div>
+      <div class="msg-ts">${ME.emoji} ${flag} ${ME.name} · ${m.time||''}</div>`;
+  }
+  box.appendChild(wrap);
+}
+
+function escHtml(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+window.sendMsg = function() {
+  const inp = document.getElementById('chat-inp');
+  const txt = inp.value.trim(); if (!txt) return;
+  const ct = getCT(TZ[ME.city] || 3);
+  push(ref(db, 'messages'), {
+    name: ME.name, role: ME.role, city: ME.city,
+    emoji: ME.emoji, color: ME.color,
+    text: txt, time: ct, ts: Date.now()
+  });
+  inp.value = '';
+};
+
+document.getElementById('chat-inp').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.sendMsg(); }
+});
+
+function buildQuickReplies() {
+  const row = document.getElementById('qr-row'); row.innerHTML = '';
+  ['Tamam 👍','Allah korusun 🙏','İnşallah ❤️','Sizi çok özledim 😢','Harika! 🎉','Nasılsınız?'].forEach(t => {
+    const b = document.createElement('div'); b.className = 'qr'; b.textContent = t;
+    b.onclick = () => { document.getElementById('chat-inp').value = t; document.getElementById('chat-inp').focus(); };
+    row.appendChild(b);
+  });
+}
+
+// ═══════════════════════════════════════
+// MAP LEGEND
+// ═══════════════════════════════════════
+function renderMapLeg() {
+  const box = document.getElementById('map-leg'); box.innerHTML = '';
+  const mems = Object.values(allMembers);
+  mems.forEach((m, i) => {
+    const ct = getCT(TZ[m.city]||3);
+    const d = document.createElement('div'); d.className = 'ml'; d.style.animationDelay = `${i*.07}s`;
+    d.innerHTML = `<div class="ml-dot" style="background:${m.color||'#aaa'}"></div>
+      <div class="ml-info"><div class="ml-nm">${m.emoji||''} ${m.name} ${m.name===ME.name?'<span style="color:var(--muted);font-size:.7rem">(Sen)</span>':''}</div>
+        <div class="ml-city">${FLAGS[m.city]||''} ${m.city||''}</div></div>
+      <div class="ml-r"><div class="ml-t">${ct}</div><div class="ml-w">${WEATHERS[m.city]||'🌤'}</div></div>`;
+    box.appendChild(d);
+  });
+}
+
+// ═══════════════════════════════════════
+// STATUS LIST
+// ═══════════════════════════════════════
+function renderStList() {
+  const box = document.getElementById('st-list'); box.innerHTML = '';
+  Object.values(allMembers).forEach(m => {
+    const bat = m.name === ME.name ? batVal : m.bat;
+    const d = document.createElement('div'); d.className = 'st-item';
+    d.innerHTML = `<div class="st-l">${m.emoji||'👤'} ${m.name}
+      <span style="color:var(--muted);font-size:.72rem">${FLAGS[m.city]||''} ${m.city||''}</span></div>
+      <div class="st-r" style="color:${m.status==='online'?'var(--green)':m.status==='away'?'var(--yellow)':'var(--muted)'}">
+        ${m.status==='online'?'🟢 Aktif':m.status==='away'?'🟡 Meşgul':'⚫ Çevrimdışı'}
+        ${bat!==null?`<span style="color:var(--soft);margin-left:5px">🔋${bat}%</span>`:''}
+      </div>`;
+    box.appendChild(d);
+  });
+}
+
+// ═══════════════════════════════════════
+// QUICK SEND — also to chat
+// ═══════════════════════════════════════
+window.qa = function(ic, msg) {
+  toast(`${ic} "${msg}" — Herkese gönderildi!`, 'g');
+  const ct = getCT(TZ[ME.city]||3);
+  push(ref(db, 'messages'), {
+    name: ME.name, role: ME.role, city: ME.city,
+    emoji: ME.emoji, color: ME.color,
+    text: `${ic} ${msg}`, time: ct, ts: Date.now()
+  });
+};
+
+window.sos = function() {
+  toast('🚨 ACİL BİLDİRİMİ GÖNDERİLDİ!', 'r');
+  const ct = getCT(TZ[ME.city]||3);
+  push(ref(db, 'messages'), {
+    name: ME.name, role: ME.role, city: ME.city, emoji: ME.emoji, color: ME.color,
+    text: '🚨🚨🚨 ACİL — YARDIM EDİN! 🚨🚨🚨', time: ct, ts: Date.now()
+  });
+};
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+window.toast = function(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast on ' + type;
+  clearTimeout(t._t); t._t = setTimeout(() => t.className = 'toast', 2800);
+};
+
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+window.goTab = function(name, btn) {
+  document.querySelectorAll('#app .scr').forEach(s => { if(s.id!=='app') s.classList.remove('on'); });
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById('s-'+name).classList.add('on');
+  btn.classList.add('on');
+  if (name === 'map') renderMapLeg();
+  if (name === 'act') renderStList();
+  if (name === 'chat') document.getElementById('chat-badge').classList.remove('on');
+};
+
+function show(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// ═══════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════
+(function boot() {
+  const saved = localStorage.getItem('malabawo_me');
+  if (saved) { try { ME = JSON.parse(saved); initApp(); return; } catch {} }
+})();
+</script>
+
+</body>
+</html>
